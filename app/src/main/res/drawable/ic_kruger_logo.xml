@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="100dp"
+    android:height="100dp"
+    android:viewportWidth="100"
+    android:viewportHeight="100">
+    <!-- Hexagonal Geometric Kruger Emblem -->
+    <!-- Top outer right stroke -->
+    <path
+        android:fillColor="#38BDF8"
+        android:pathData="M50,8 L88,30 L88,46 L50,24 L24,39 L50,54 L74,40 L74,54 L50,68 L26,54 L26,39.5 L14,32.5 L14,70 L50,91 L86,70 L86,56 L74,63 L50,77 L26,63 L26,70 L50,84 L74,70 L86,77 L50,98 L8,74 L8,26 Z" />
+</vector>

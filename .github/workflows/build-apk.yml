@@ -23,20 +23,16 @@ jobs:
         with:
           channel: 'stable'
 
-      - name: Rebuild Project Structure & Build APK
+      - name: Create Clean Project & Merge Code
         run: |
-          # Backup user files
-          mkdir -p /tmp/user_code
-          cp -rf lib pubspec.yaml /tmp/user_code/ 2>/dev/null || true
+          # Create a fresh flutter app structure
+          flutter create --org com.kruger.vpn vpn_app
           
-          # Create fresh flutter app
-          flutter create --org com.kruger.vpn app_builder
-          cd app_builder
+          # Copy user's code into the clean project structure
+          if [ -d "lib" ]; then cp -rf lib/ vpn_app/; fi
+          if [ -f "pubspec.yaml" ]; then cp -f pubspec.yaml vpn_app/; fi
           
-          # Restore user files
-          cp -rf /tmp/user_code/* .
-          
-          # Build APK
+          cd vpn_app
           flutter pub get
           flutter build apk --release --no-tree-shake-icons
 
@@ -44,5 +40,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Kruger-VPN-APK
-          path: app_builder/build/app/outputs/flutter-apk/app-release.apk
+          path: vpn_app/build/app/outputs/flutter-apk/app-release.apk
           

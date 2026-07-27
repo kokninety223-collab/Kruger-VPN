@@ -1,40 +1,48 @@
-name: Build Flutter APK
+name: Build Release APK
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "main", "master" ]
   workflow_dispatch:
 
 jobs:
   build:
-    name: Build Release APK
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Java Development Kit (JDK 17)
+      - name: Set up Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
+          distribution: 'zulu'
           java-version: '17'
 
-      - name: Set up Flutter SDK
+      - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          cache: true
 
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Build Release APK
-        run: flutter build apk --release
+      - name: Rebuild Project Structure & Build APK
+        run: |
+          # Backup user files
+          mkdir -p /tmp/user_code
+          cp -rf lib pubspec.yaml /tmp/user_code/ 2>/dev/null || true
+          
+          # Create fresh flutter app
+          flutter create --org com.kruger.vpn app_builder
+          cd app_builder
+          
+          # Restore user files
+          cp -rf /tmp/user_code/* .
+          
+          # Build APK
+          flutter pub get
+          flutter build apk --release --no-tree-shake-icons
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: flutter-release-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          name: Kruger-VPN-APK
+          path: app_builder/build/app/outputs/flutter-apk/app-release.apk
+          
